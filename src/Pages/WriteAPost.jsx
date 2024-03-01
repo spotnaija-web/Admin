@@ -241,6 +241,13 @@ const WriteAPost = () => {
       
 
     <div className="w-1/3">
+    <div className='my-4'>
+        <label className='text-2xl'>Timeline</label>
+        <div>
+          {timelineTabs && timelineTabs}
+        </div>
+      </div>
+
       <div className='my-4'>
         <label className='text-2xl'>Category</label>
         <div>
@@ -255,12 +262,6 @@ const WriteAPost = () => {
         </div>
       </div>
 
-      <div className='my-4'>
-        <label className='text-2xl'>Timeline</label>
-        <div>
-          {timelineTabs && timelineTabs}
-        </div>
-      </div>
       </div>
     </div>
     </form>
