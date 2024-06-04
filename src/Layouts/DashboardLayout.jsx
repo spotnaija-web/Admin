@@ -18,11 +18,12 @@ export default function DashboardLayout(){
     }
     return(
         <div className="bg-black-500">
-            <div className={`w-auto md:w-[18%] ${!isMenuOpen ? 'hidden' : 'block'} md:block h-[100vh] z-[20] bg-primary-dark p-6 fixed`}>
-                <h2 className="text-[#CCCCCC] text-xl font-bold pb-4 cursor-pointer"><Link to={"/"}>Spotnaija</Link></h2>
+            {/** ${!isMenuOpen ? 'hidden' : 'block'} */}
+            <div className={`w-auto md:w-[18%] ${!isMenuOpen ? 'block' : 'block'} bg-white md:block h-[100vh] z-[20] bg-primary-dark p-6 fixed`}>
+                <h2 className="text-[#333] text-xl font-bold pb-4 cursor-pointer"><Link to={"/"}>Spotnaija</Link></h2>
                 <div className="pt-8 pb-6">
-                    <h4 className="text-[#CCCCCC] font-medium">Welcome,</h4>
-                    <h3 className="text-[#CCCCCC] font-bold">To Admin Page</h3>
+                    <h4 className="text-[#333] font-medium">Welcome,</h4>
+                    <h3 className="text-[#333] font-bold">To Admin Page</h3>
                 </div>
                 <hr />
                 <div className="py-4">
@@ -54,7 +55,7 @@ export default function DashboardLayout(){
                 </div>
 
                 <div>
-                    <div className="text-[#CCCCCC] flex font-medium align-center py-6 absolute bottom-10">
+                    <div className=" flex font-medium align-center py-3  bottom-10">
                         <IoLogOutOutline size={25} />
                         <div onClick={logoutUser} className="ml-2 cursor-pointer">
                             Logout
@@ -72,7 +73,7 @@ export default function DashboardLayout(){
 
 function DashNavLinkCont({children, active, toggleMenu}){
     return(
-        <div onClick={toggleMenu} className={`${active ? 'text-[#CCCCCC]' : "text-black"} hover:text-[#CCCCCC] flex font-medium align-center py-6 cursor-pointer`}>
+        <div onClick={toggleMenu} className={`${active ? 'text-[#F0C]' : "text-black"} hover:text-[#CCCCCC] flex font-medium align-center py-3 cursor-pointer`}>
             {children}
         </div>
     )
