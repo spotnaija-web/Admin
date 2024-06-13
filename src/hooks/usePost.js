@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOnePost, updatePostApi } from "../apis/postsapi";
+import { getOnePost, updatePostApi, updatePostPublishStatusApi } from "../apis/postsapi";
 
 export default function usePost(id){
     let [post, setPost] = useState({})
@@ -29,9 +29,19 @@ export default function usePost(id){
         }
     }
 
+    async function updatePostPublishStatus(payload, token){
+        let result = await updatePostPublishStatusApi(payload, token)
+        if(result?.data?.status){
+            setPost(result)
+            return {success: true, message: "post publish status updated successfully"}
+        }else{
+            return {success: false, message: "An Error occured, failed to update post publish status "}
+        }
+    }
+
     useEffect(()=>{
         fetchPost(id)
     },[])
 
-    return {post, postLoading, updatePost, postStatus}
+    return {post, postLoading, updatePost, updatePostPublishStatus, postStatus}
 }

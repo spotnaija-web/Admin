@@ -53,4 +53,20 @@ async function getOnePost(id){
     }
 }
 
-export { getAllPosts, getOnePost, createPostApi, updatePostApi }
+async function updatePostPublishStatusApi(payload, accessToken){
+    try{
+        let result = await axios.patch(`${baseurl}/api/posts/status`, payload, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            }
+        })
+        console.log("update post status", result)
+        return result
+    }catch(err){
+        return err
+    }
+}
+
+export { getAllPosts, getOnePost, createPostApi, updatePostApi, updatePostPublishStatusApi }
