@@ -5,6 +5,7 @@ import ViewAllPosts from "./Pages/ViewAllPosts"
 import AuthWrapper from "./Pages/AuthWrapper"
 import ViewPost from "./Pages/ViewPost"
 import WriteAPost from "./Pages/WriteAPost"
+import EditPost from "./Pages/EditPost"
 
 function App() {
 
@@ -28,6 +29,10 @@ function App() {
         {
           path: "/post/:title",
           element: <ViewPost />
+        },
+        {
+          path: "/edit",
+          element: <EditPost />
         }
       ]
     }

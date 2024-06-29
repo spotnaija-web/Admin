@@ -9,9 +9,9 @@ import { Img } from "../components/Img"
 
 export default function ViewPost(){
     let { accessToken } = useLogin()
-    let [searchParams, setSearchParams] = useSearchParams()
+    let [searchParams] = useSearchParams()
     let id = searchParams.get("id")
-    let {post, updatePost, updatePostPublishStatus } = usePost(id)
+    let {post, approveUserPost} = usePost(id)
     let navigate = useNavigate()
 
     let [status, setStatus] = useState({})
@@ -26,8 +26,7 @@ export default function ViewPost(){
             post_id: id, 
             publish_status: true
         }
-        let result = await updatePostPublishStatus(payload, accessToken)
-        console.log(result)
+        let result = await approveUserPost(payload, accessToken)
         if(result.success){
             // navigate("/all-posts")
         //    window.location.reload();
@@ -40,22 +39,32 @@ export default function ViewPost(){
             post_id: id, 
             publish_status: false
         }
-        let result = await updatePostPublishStatus(payload, accessToken)
+        let result = await approveUserPost(payload, accessToken)
         if(result.success){
-            // navigate("/all-posts")
-        //    window.location.reload();
+            navigate("/all-posts")
+            window.location.reload();
         }else{
             setStatus(result)
         }
+    }
+
+    function goToEdit(){
+        navigate(`/edit?id=${id}`)
     }
 
     return(
         <div className="prose">
             <div className="flex flex-col items-center p-2">
             {!status?.success && <div className="text-xl text-red-500 font-medium">{status?.message}</div>}
-                <div className="my-4">
-                    <PostStatusText publishStatus={post.publishStatus}></PostStatusText>
+                <div className="flex items-center gap-3">
+                    <div className="my-4">
+                        <PostStatusText publishStatus={post.publishStatus}></PostStatusText>
+                    </div>
+                    <div onClick={goToEdit} className="my-4 border-2 p-[5px] border-green-500 rounded-[5px] cursor-pointer">
+                        Edit post
+                    </div>
                 </div>
+                
                 <div className="w-[60%]">
                     <Img src={post?.cover_photo} source = "api" className="w-[100%]"></Img>
                 </div>

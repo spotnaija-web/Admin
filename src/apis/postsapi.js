@@ -17,7 +17,7 @@ async function createPostApi(payload, accessToken){
     }
 }
 
-async function updatePostApi(payload, accessToken){
+async function editPostApi(payload, accessToken){
     try{
         let result = await axios.patch(`${baseurl}/api/posts`, payload, {
             headers: {
@@ -26,7 +26,25 @@ async function updatePostApi(payload, accessToken){
                 "Authorization": `Bearer ${accessToken}`
             }
         })
+
         console.log("edit post", result)
+
+        return result.data
+    }catch(err){
+        return err
+    }
+}
+
+async function approvePostApi(payload, accessToken){
+    try{
+        let result = await axios.patch(`${baseurl}/api/posts/status`, payload, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            }
+        })
+        console.log("approve post", result)
         return result
     }catch(err){
         return err
@@ -53,20 +71,4 @@ async function getOnePost(id){
     }
 }
 
-async function updatePostPublishStatusApi(payload, accessToken){
-    try{
-        let result = await axios.patch(`${baseurl}/api/posts/status`, payload, {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            }
-        })
-        console.log("update post status", result)
-        return result
-    }catch(err){
-        return err
-    }
-}
-
-export { getAllPosts, getOnePost, createPostApi, updatePostApi, updatePostPublishStatusApi }
+export { getAllPosts, getOnePost, editPostApi, createPostApi, approvePostApi }

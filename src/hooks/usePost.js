@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOnePost, updatePostApi, updatePostPublishStatusApi } from "../apis/postsapi";
+import { getOnePost, approvePostApi, editPostApi } from "../apis/postsapi";
 
 export default function usePost(id){
     let [post, setPost] = useState({})
@@ -19,8 +19,8 @@ export default function usePost(id){
         }
     }
 
-    async function updatePost(payload, token){
-        let result = await updatePostApi(payload, token)
+    async function approveUserPost(payload, token){
+        let result = await approvePostApi(payload, token)
         if(result?.data?.status){
             setPost(result)
             return {success: true, message: "post updated successfully"}
@@ -29,13 +29,15 @@ export default function usePost(id){
         }
     }
 
-    async function updatePostPublishStatus(payload, token){
-        let result = await updatePostPublishStatusApi(payload, token)
+    async function editPost(payload, token){
+        setPostLoading(true)
+        let result = await editPostApi(payload, token)
         if(result?.data?.status){
-            setPost(result)
-            return {success: true, message: "post publish status updated successfully"}
+            setPost(result.data.post)
+            setPostLoading(false)
         }else{
-            return {success: false, message: "An Error occured, failed to update post publish status "}
+            setPostStatus({error: true, message: result.message})
+            setPostLoading(false)
         }
     }
 
@@ -43,5 +45,5 @@ export default function usePost(id){
         fetchPost(id)
     },[])
 
-    return {post, postLoading, updatePost, updatePostPublishStatus, postStatus}
+    return {post, postLoading, approveUserPost, editPost, postStatus}
 }

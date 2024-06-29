@@ -5,14 +5,19 @@ import { Editor } from '@tinymce/tinymce-react';
 import { uploadImageApi } from '../apis/imagesapi';
 import { useLogin } from '../hooks/useLogin';
 import { getCategoriesApi, getSubCategoriesApi, getTimelinesApi } from '../apis/categoriesapi';
-import { createPostApi } from '../apis/postsapi';
-import { useNavigate } from 'react-router-dom';
+import { editPostApi } from '../apis/postsapi';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { FaTimes } from 'react-icons/fa';
+import usePost from '../hooks/usePost';
 
-const WriteAPost = () => {
+const EditPost = () => {
   const {accessToken} = useLogin()
   const navigate = useNavigate()
+
+  let [searchParams] = useSearchParams()
+  let id = searchParams.get("id")
+  let { post } = usePost(id)
 
   const [preview, setPreview] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null)
@@ -20,6 +25,7 @@ const WriteAPost = () => {
   const [mainCategoryId, setMainCategoryId] = useState('')
   const [subCategoryId, setSubCategoryId] = useState('')
   const [timelineId, setTimelineId] = useState('')
+  const [publishStatus, setPublishStatus] = useState("")
   const [title, setTitle] = useState('');
 
   const [categoriesArr, setCategoriesArr] = useState([])
@@ -32,71 +38,59 @@ const WriteAPost = () => {
   let categoriesTabs = categoriesArr?.map((category)=>(
       <div key={category.id}>
         <label htmlFor={category.name}>{category.name}</label>
-        <input type='radio' name='category' value={category.id} onChange={()=> {setMainCategoryId(category.id)}} id={category.name} />
+        <input type='radio' name='category' value={category.id} checked={category.id === mainCategoryId} onChange={()=> {setMainCategoryId(category.id)}} id={category.name} />
       </div>
     ))
 
   let subCategoriesTabs = subCategoriesArr?.map((subcategory)=>(
     <div key={subcategory.id}>
       <label htmlFor={subcategory.name}>{subcategory.name}</label>
-      <input type='radio' name='sub-category' value={subcategory.id} onChange={()=> {setSubCategoryId(subcategory.id)}} id={subcategory.name} />
+      <input type='radio' name='sub-category' value={subcategory.id} checked={subcategory.id === subCategoryId} onChange={()=> {setSubCategoryId(subcategory.id)}} id={subcategory.name} />
     </div>
   ))
 
   let timelineTabs = timelinesArr?.map((timeline)=>(
     <div key={timeline.id}>
       <label htmlFor={timeline.name}>{timeline.name}</label>
-      <input type='radio' name='timeline' value={timeline.id} onChange={()=> {setTimelineId(timeline.id)}} id={timeline.name} />
+      <input type='radio' name='timeline' value={timeline.id} checked={timeline.id === timelineId} onChange={()=> {setTimelineId(timeline.id)}} id={timeline.name} />
     </div>
   ))
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true)
-
-    if(!coverPhoto){
-      setError({error: true, message: "no cover photo"})
-      setLoading(false)
-      return
-    }
-
-    if(!title || !content || !mainCategoryId || !subCategoryId || !timelineId){
-      setError({error: true, message: "fill all fields and select required options"})
-      setLoading(false)
-      return
-    }
     
       console.log("credentials filled")
-      let coverPhotoUrl = await uploadAndGetCoverPhotoUrl()
+      let coverPhotoUrl
+
+      if(coverPhoto){
+        coverPhotoUrl = await uploadAndGetCoverPhotoUrl()
+      }
       console.log(coverPhotoUrl)
-      if(coverPhotoUrl){
   
         let postBody = {
-          title: title,
-          body: content,
-          cover_photo: coverPhotoUrl,
-          publish_status: true,
+          title: title ? title : undefined,
+          body: content ? content : undefined,
+          cover_photo: coverPhotoUrl ? coverPhotoUrl : undefined,
+          publish_status: publishStatus ? publishStatus : undefined,
           content_type: "article",
-          main_category_id: mainCategoryId,
-          sub_category_id: subCategoryId,
-          timeline_id: timelineId
+          main_category_id: mainCategoryId ? mainCategoryId : undefined,
+          sub_category_id: subCategoryId ? subCategoryId : undefined,
+          timeline_id: timelineId ? timelineId : undefined
         }
 
-        console.log(postBody)
+        console.log("after submiting", postBody)
   
-        let result = await createPostApi(postBody, accessToken)
+        let result = await editPostApi(postBody, accessToken)
         console.log("result", result)
         if(result.status === false){
-          setError({error: true, message: result.message})
-          setLoading(false)
-        }else{
-          console.log("post successfull")
-          navigate("/")
-          setLoading(false)
-        }
-    
-
-    }
+            setError({error: true, message: result.message})
+            setLoading(false)
+          }else{
+            console.log("post successfull")
+            navigate("/")
+            setLoading(false)
+          }
   }
 
   function handleTitleChange(e){
@@ -129,7 +123,6 @@ const WriteAPost = () => {
         return result.file_name
       }else{
         setError({error: true, message: "Error uploading"})
-        setLoading(false)
       }
   }
 
@@ -170,6 +163,16 @@ const WriteAPost = () => {
     subCategoriesArrSet()
     timelineArrSet()
   },[])
+
+  useEffect(()=>{
+      setTitle(post?.title)
+      setContent(post?.content_body)
+      setPreview(post?.cover_photo)
+      setMainCategoryId(post?.main_category_id)
+      setSubCategoryId(post?.sub_category_id)
+      setTimelineId(post?.timeline_id)
+      setPublishStatus(post?.publishStatus)
+  }, [post])
 
 
   return (
@@ -220,7 +223,7 @@ const WriteAPost = () => {
     <div className="flex">
       <div className="w-2/3 pr-5">
         <Editor
-          initialValue="<p>Enter your post content here</p>"
+          initialValue={content}
           apiKey="iwiz8uvasav8rywbtd7915gj9o96w0k05f7u3k7w6tix4kho"
           init={{
             height: 950,
@@ -271,4 +274,4 @@ const WriteAPost = () => {
 
 
 
-export default WriteAPost;
+export default EditPost;

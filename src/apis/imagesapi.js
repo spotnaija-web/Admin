@@ -2,12 +2,10 @@ import axios from "axios"
 
 import { baseurl } from "./apiconfig";
 
-let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcwOTE1MDQxMSwiZXhwIjoxNzEwMDE0NDExfQ.F0oCDp-O98eM5CusuKiLZ7Mwmo4D8MINtbKO_tPfcVw"
-
 async function uploadImageApi(payload, filename, accessToken){
 
     console.log("filename",filename, "paload", payload, "token", accessToken)
-
+//
 
 let data = new FormData();
 data.append('photo', payload);
@@ -17,7 +15,7 @@ let config = {
   maxBodyLength: Infinity,
   url: `${baseurl}/api/photo`,
   headers: { 
-    'Authorization': `Bearer ${token}`
+    'Authorization': `Bearer ${accessToken}`
   },
   data : data
 };
