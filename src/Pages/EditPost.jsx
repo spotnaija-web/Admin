@@ -7,6 +7,7 @@ import { useLogin } from '../hooks/useLogin';
 import { getCategoriesApi, getSubCategoriesApi, getTimelinesApi } from '../apis/categoriesapi';
 import { editPostApi } from '../apis/postsapi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Img } from "../components/Img"
 
 import { FaTimes } from 'react-icons/fa';
 import usePost from '../hooks/usePost';
@@ -61,7 +62,7 @@ const EditPost = () => {
     setLoading(true)
     
       console.log("credentials filled")
-      let coverPhotoUrl
+      let coverPhotoUrl;
 
       if(coverPhoto){
         coverPhotoUrl = await uploadAndGetCoverPhotoUrl()
@@ -69,6 +70,7 @@ const EditPost = () => {
       console.log(coverPhotoUrl)
   
         let postBody = {
+          post_id: id,
           title: title ? title : undefined,
           body: content ? content : undefined,
           cover_photo: coverPhotoUrl ? coverPhotoUrl : undefined,
@@ -84,13 +86,13 @@ const EditPost = () => {
         let result = await editPostApi(postBody, accessToken)
         console.log("result", result)
         if(result.status === false){
-            setError({error: true, message: result.message})
-            setLoading(false)
-          }else{
-            console.log("post successfull")
-            navigate("/")
-            setLoading(false)
-          }
+          setError({error: true, message: result.message})
+          setLoading(false)
+        }else{
+          console.log("post successfull");
+          navigate(-1);
+          setLoading(false);
+        }
   }
 
   function handleTitleChange(e){
@@ -205,7 +207,8 @@ const EditPost = () => {
         {preview && (
           <>
           <FaTimes onClick={removePreview} className="mt-5 mb-5 md:my-5" />
-            <img src={preview} alt="Preview" className="w-84 h-44 mt-5 mb-5 md:my-5" />
+          { /*  <img src={preview} alt="Preview" source="api" className="w-84 h-44 mt-5 mb-5 md:my-5" /> */ }
+            <Img src={preview} alt="Preview" source = "api" className="w-84 h-44 mt-5 mb-5 md:my-5"></Img>
           </>
         )}
       </div>
