@@ -188,7 +188,7 @@ const EditPost = () => {
         disabled={loading}
         type="submit"
       >
-        {loading ? "..." : "Publish"}
+        {loading ? "..." : "Save Changes"}
       </button>
     </div>
       <div className='my-4'>
