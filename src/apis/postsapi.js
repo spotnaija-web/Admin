@@ -53,7 +53,7 @@ async function approvePostApi(payload, accessToken){
 
 async function getAllPosts(){
     try{
-        let result = await axios.get(`${baseurl}/api/posts`)
+        let result = await axios.get(`${baseurl}/api/posts?only_published=false`)
         console.log("getallposts:", result)
         return result
     }catch(err){
