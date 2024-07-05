@@ -4,7 +4,7 @@ import { baseurl } from "./apiconfig";
 
 async function uploadImageApi(payload, filename, accessToken){
 
-    console.log("filename",filename, "paload", payload, "token", accessToken)
+    console.log("filename", filename, "paload", payload, "token", accessToken)
 //
 
 let data = new FormData();

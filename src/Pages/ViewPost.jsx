@@ -28,8 +28,8 @@ export default function ViewPost(){
         }
         let result = await approveUserPost(payload, accessToken)
         if(result.success){
-            // navigate("/all-posts")
-        //    window.location.reload();
+        //     navigate("/all-posts")
+            window.location.reload();
         }else{
             setStatus(result)
         }
@@ -41,7 +41,7 @@ export default function ViewPost(){
         }
         let result = await approveUserPost(payload, accessToken)
         if(result.success){
-            navigate("/all-posts")
+        //    navigate("/all-posts")
             window.location.reload();
         }else{
             setStatus(result)

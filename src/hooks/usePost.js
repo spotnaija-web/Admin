@@ -22,8 +22,8 @@ export default function usePost(id){
     async function approveUserPost(payload, token){
         let result = await approvePostApi(payload, token)
         if(result?.data?.status){
-            setPost(result)
-            return {success: true, message: "post updated successfully"}
+        //    setPost(result)
+            return {success: true, message: "Post updated successfully"}
         }else{
             return {success: false, message: "An Error occured, failed to update post"}
         }
