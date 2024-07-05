@@ -97,7 +97,7 @@ const EditPost = () => {
           setLoading(false)
         }else{
           console.log("post successfull");
-      //    navigate(-1);
+          navigate(-1);
           setLoading(false);
         }
       }else{
