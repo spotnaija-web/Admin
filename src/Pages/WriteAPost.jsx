@@ -10,6 +10,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { FaTimes } from 'react-icons/fa';
 
+import { baseurl } from "../apis/apiconfig.js"
+
+const base_url = baseurl;
+
+const image_location = base_url + "/api/photo/";
+
 const WriteAPost = () => {
   const {accessToken} = useLogin()
   const navigate = useNavigate()
@@ -138,13 +144,13 @@ const WriteAPost = () => {
     console.log(blobInfo.blob())
 
    let result = await uploadImageApi(blobInfo.blob(), blobInfo.filename(), accessToken)
-   console.log(result.result.location)
+   console.log(result.file_name)
 
     return new Promise((resolve, reject)=>{
       if(result.status !== true){
         reject("error uploading image")
       }else{
-        resolve(result.result.Location)
+        resolve(image_location + result.file_name)
       }
     })
    

@@ -12,6 +12,12 @@ import { Img } from "../components/Img"
 import { FaTimes } from 'react-icons/fa';
 import usePost from '../hooks/usePost';
 
+import { baseurl } from "../apis/apiconfig.js"
+
+const base_url = baseurl;
+
+const image_location = base_url + "/api/photo/";
+
 const EditPost = () => {
   const {accessToken} = useLogin()
   const navigate = useNavigate()
@@ -68,7 +74,8 @@ const EditPost = () => {
         coverPhotoUrl = await uploadAndGetCoverPhotoUrl()
       }
       console.log(coverPhotoUrl)
-  
+      if(coverPhotoUrl !== false){
+        
         let postBody = {
           post_id: id,
           title: title ? title : undefined,
@@ -90,9 +97,12 @@ const EditPost = () => {
           setLoading(false)
         }else{
           console.log("post successfull");
-          navigate(-1);
+      //    navigate(-1);
           setLoading(false);
         }
+      }else{
+        setLoading(false);
+      }
   }
 
   function handleTitleChange(e){
@@ -124,7 +134,8 @@ const EditPost = () => {
       if(result.status){
         return result.file_name
       }else{
-        setError({error: true, message: "Error uploading"})
+        setError({error: true, message: "Error uploading! " + result.message})
+        return false;
       }
   }
 
@@ -133,13 +144,13 @@ const EditPost = () => {
     console.log(blobInfo.blob())
 
    let result = await uploadImageApi(blobInfo.blob(), blobInfo.filename(), accessToken)
-   console.log(result.result.location)
+   console.log(result.file_name)
 
     return new Promise((resolve, reject)=>{
       if(result.status !== true){
         reject("error uploading image")
       }else{
-        resolve(result.result.Location)
+        resolve(image_location + result.file_name)
       }
     })
    
