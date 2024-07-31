@@ -16,6 +16,8 @@ const base_url = baseurl;
 
 const image_location = base_url + "/api/photo/";
 
+const TINYMCE_API_KEY = import.meta.env.VITE_TINYMCE_API_KEY;
+
 const WriteAPost = () => {
   const {accessToken} = useLogin()
   const navigate = useNavigate()
@@ -227,7 +229,7 @@ const WriteAPost = () => {
       <div className="w-2/3 pr-5">
         <Editor
           initialValue="<p>Enter your post content here</p>"
-          apiKey="iwiz8uvasav8rywbtd7915gj9o96w0k05f7u3k7w6tix4kho"
+          apiKey={TINYMCE_API_KEY}
           init={{
             height: 950,
             menubar: false,
