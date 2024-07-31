@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { loginapi } from "../apis/loginapi";
+import { jwtDecode } from 'jwt-decode';
 
-let accessTokenKey = "spot9AdminAccessToken"
+const JWT_SECRET = import.meta.env.VITE_JWT_SECRET;
+
+let accessTokenKey = "spot9AdminAccessToken";
 
 export function useLogin(){
     let [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -10,13 +13,42 @@ export function useLogin(){
     let [errorStatus, setErrorStatus] = useState({error: false, message: ""})
 
 
-    useEffect(()=>{
+/*    useEffect(()=>{
         let token = localStorage.getItem(accessTokenKey)
         if(token){
             setIsLoggedIn(true)
             setAccessToken(token)
         }
-    },[])
+    },[])   */
+
+
+// ... rest of your code
+
+    useEffect(() => {
+    const token = localStorage.getItem(accessTokenKey);
+
+    if (token) {
+        try {
+        const decodedToken = jwtDecode(token);
+        // Check for expiration or other claims here
+        if (decodedToken.exp < Date.now() / 1000) {
+            // Handle token expiration
+            console.log('Token expired');
+            setIsLoggedIn(false);
+            localStorage.removeItem(accessTokenKey);
+        } else {
+            setIsLoggedIn(true);
+            setAccessToken(token);
+        }
+        } catch (error) {
+        console.error('Error decoding token:', error);
+        setIsLoggedIn(false);
+        localStorage.removeItem(accessTokenKey);
+        }
+    }
+    }, []);
+
+
 
     async function login(payload){
         setLoginLoading(true)
